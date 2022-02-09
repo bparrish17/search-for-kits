@@ -1,5 +1,5 @@
 // external
-import React from 'react';
+import React, { useEffect } from 'react';
 import MuiTextField from '@mui/material/TextField';
 import { debounce } from 'lodash'
 
@@ -24,6 +24,14 @@ function App() {
   const onSearchKitsInput = React.useMemo(
     () => debounce(setSearchInput, 300),
   []);
+
+  useEffect(() => {
+    console.log('HERE:')
+    fetch('/api/kits')
+      .then((res) => res.json())
+      .then((results) => console.log('results', results))
+  }, [])
+
 
   return (
     <div className='App'>
