@@ -1,24 +1,40 @@
+// external
 import React from 'react';
-import logo from './logo.svg';
+import MuiTextField from '@mui/material/TextField';
+import { debounce } from 'lodash'
+
+// internal
+import DataTable from './DataTable';
+import SearchService from './search.service';
+import { Kit } from './models';
 import './App.css';
 
+
 function App() {
+  const [searchInput, setSearchInput] = React.useState<string>('')
+  const [searchResults, setSearchResults] = React.useState<Kit[]>([])
+  const searchService = new SearchService();
+
+  React.useEffect(() => {
+    searchService.search(searchInput).then((results) => {
+      setSearchResults(results)
+    })
+  }, [searchInput])
+
+  const onSearchKitsInput = React.useMemo(
+    () => debounce(setSearchInput, 300),
+  []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='App'>
+      <MuiTextField
+        focused
+        variant='outlined'
+        label='Search for Kits'
+        style={{ marginBottom: '20px' }}
+        onChange={(evt) => onSearchKitsInput(evt?.target?.value)}
+      />
+      <DataTable data={searchResults} />
     </div>
   );
 }
