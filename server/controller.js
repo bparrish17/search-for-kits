@@ -17,14 +17,14 @@ class Controller {
    * @returns {Promise<Kit[]>} : array of kits
    */
   searchKits(req, res) {
-    const labelId = req.query.label_id;
+    const labelId = req.query.labelId;
     this.fetchKitsFromJSON()
       .then((kits) => {
         const result = kits.filter((kit) => kit.label_id.includes(labelId)) || []
         res.status(200).send(result)
       })
       .catch((err) => {
-        res.status(400).send(err)
+        res.status(500).send(err)
       })
   }
 
@@ -47,17 +47,18 @@ class Controller {
    * @returns {Promise<KitMap>} : Promise resolving to object key'd by Kit IDs
    */
   createKitMap() {
-    return this.fetchKitsFromJSON().then((kits) => {
-      return kits.reduce((acc, kit) => {
-        return { ...acc, [kit.id]: kit }
-      }, {})
-    })
+    return this.fetchKitsFromJSON()
+      .then((kits) => {
+        return kits.reduce((acc, kit) => {
+          return { ...acc, [kit.id]: kit }
+        }, {})
+      })
+      .catch(() => ({}))
   }
 
   /**
    * Fetches Kit Data from JSON
    * @returns {Promise<Kit[]>}
-   * @description
    */
   fetchKitsFromJSON() {
     const kitsFilePath = path.join(__dirname, `data/KITS_SHIPPING_DATA.json`);
