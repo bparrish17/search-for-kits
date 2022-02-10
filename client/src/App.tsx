@@ -25,6 +25,13 @@ function App() {
     () => debounce(setSearchInput, 300),
   []);
 
+  React.useEffect(() => {
+    console.log('here')
+    fetch('/api/kits/459').then((res) => res.json()).then((res) => {
+      console.log('res', res)
+    })
+  })
+
   return (
     <div className='App'>
       <MuiTextField
@@ -32,10 +39,13 @@ function App() {
         variant='outlined'
         aria-label='Search for Kits Text Field'
         label='Search for Kits'
-        style={{ marginBottom: '20px' }}
+        style={{ width: '50%', marginBottom: '20px' }}
         onChange={(evt) => onSearchKitsInput(evt?.target?.value)}
       />
-      <DataTable data={searchResults} />
+      {searchResults.length 
+        ? <DataTable data={searchResults} />
+        : <div>No kits found for "{searchInput}"</div>
+      }
     </div>
   );
 }
