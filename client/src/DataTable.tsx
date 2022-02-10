@@ -11,7 +11,7 @@ import { Kit } from './models';
 function DataTable(props: { data: Kit[] }) {
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <Table sx={{ minWidth: 650 }} aria-label="kit search results table">
         <TableHead>
           <TableRow>
             <TableCell>ID</TableCell>

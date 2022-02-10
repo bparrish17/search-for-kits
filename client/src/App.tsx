@@ -1,5 +1,5 @@
 // external
-import React, { useEffect } from 'react';
+import React from 'react';
 import MuiTextField from '@mui/material/TextField';
 import { debounce } from 'lodash'
 
@@ -25,19 +25,12 @@ function App() {
     () => debounce(setSearchInput, 300),
   []);
 
-  useEffect(() => {
-    console.log('HERE:')
-    fetch('/api/kits')
-      .then((res) => res.json())
-      .then((results) => console.log('results', results))
-  }, [])
-
-
   return (
     <div className='App'>
       <MuiTextField
         focused
         variant='outlined'
+        aria-label='Search for Kits Text Field'
         label='Search for Kits'
         style={{ marginBottom: '20px' }}
         onChange={(evt) => onSearchKitsInput(evt?.target?.value)}
