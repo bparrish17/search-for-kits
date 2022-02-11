@@ -5,10 +5,14 @@ const { isEmpty } = require('lodash')
 class Controller {
   constructor() {
     this.kitMap = {};
+    this.kits = [];
     this.searchKits.bind(this)
     this.getKitById.bind(this)
     this.createKitMap.bind(this)
     this.fetchKitsFromJSON.bind(this)
+    this.createKitMap().then((kitMap) => {
+      this.kitMap = kitMap;
+    })
   }
 
   /**
@@ -59,8 +63,10 @@ class Controller {
   /**
    * Fetches Kit Data from JSON
    * @returns {Promise<Kit[]>}
+   * @description will store copy of data in controller on first pass to be referenced later
    */
   fetchKitsFromJSON() {
+    if (this.kits.length) return Promise.resolve(this.kits)
     const kitsFilePath = path.join(__dirname, `data/KITS_SHIPPING_DATA.json`);
     return new Promise((resolve, reject) => {
       fs.readFile(kitsFilePath, 'utf8', (err, json) => {
@@ -68,6 +74,7 @@ class Controller {
         else {
           try {
             const obj = JSON.parse(json);
+            this.kits = obj;
             resolve(obj);
           } catch (e) {
             reject({ error: 'could not parse JSON file ' });
