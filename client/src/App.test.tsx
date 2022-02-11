@@ -8,7 +8,7 @@ test('has text field for searching', async () => {
   expect(textFieldElement).toBeInTheDocument();
 })
 
-test('text field has label for searching', async () => {
+test('text field has expected label', async () => {
   render(<App />);
   const textFieldElement = screen.getByLabelText('Search for Kits By Label ID')
   expect(textFieldElement).toBeInTheDocument()
