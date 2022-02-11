@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
 // internal
-import SearchService from './search.service';
+import KitService from './kit.service';
 import KitDetails from './KitDetails';
 import { Kit } from './models';
 import './App.css';
@@ -15,13 +15,13 @@ function App() {
   const [loading, setLoading] = React.useState<boolean>(true)
   const [selectedKit, setSelectedKit] = React.useState<Kit | null>()
   const [selectedKitId, setSelectedKitId] = React.useState<number>();
-  const [searchResults, setSearchResults] = React.useState<Kit[]>([])
-  const searchService = new SearchService();
+  const [kitOptions, setKitOptions] = React.useState<Kit[]>([])
+  const kitService = new KitService();
 
   React.useEffect(() => {
     setLoading(true)
-    searchService.searchKitsByLabelId().then((results) => {
-      setSearchResults(results)
+    kitService.searchKitsByLabelId().then((results) => {
+      setKitOptions(results)
       setLoading(false)
     })
   }, [])
@@ -29,7 +29,7 @@ function App() {
   React.useEffect(() => {
     if (selectedKitId) {
       setLoading(true)
-      searchService.getKitById(selectedKitId).then((kit) => {
+      kitService.getKitById(selectedKitId).then((kit) => {
         setSelectedKit(kit)
         setLoading(false)
       })
@@ -40,7 +40,7 @@ function App() {
     <div className='App'>
       <Autocomplete
         disablePortal
-        options={searchResults}
+        options={kitOptions}
         getOptionLabel={(option: Kit) => option.label_id}
         sx={{ marginBottom: '20px' }}
         noOptionsText='No kits found'

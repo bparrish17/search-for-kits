@@ -1,6 +1,6 @@
 import { Kit } from './models';
 
-export default class SearchService {
+export default class KitService {
   
   public getKitById(id: number): Promise<Kit> {
     return fetch(`/api/kits/${id}`).then((res) => res.json())
