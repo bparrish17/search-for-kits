@@ -11,7 +11,6 @@ import SearchService from './search.service';
 import { Kit } from './models';
 import './App.css';
 
-
 function App() {
   const [loading, setLoading] = React.useState<boolean>(true)
   const [searchInput, setSearchInput] = React.useState<string>('')
@@ -28,16 +27,15 @@ function App() {
 
   const onSearchKitsInput = React.useMemo(() => debounce(setSearchInput, 300), []);
 
-
   return (
     <div className='App'>
       <MuiTextField
         focused
         variant='outlined'
-        aria-label='Search for Kits Text Field'
+        aria-label='Search for Kits By Label'
         label='Search for Kits by Label'
         data-testid="search-for-kits-text-field"
-        style={{ width: '50%', marginBottom: '20px' }}
+        style={{ width: '100%', maxWidth: '400px', marginBottom: '20px' }}
         onChange={(evt) => onSearchKitsInput(evt?.target?.value)}
       />
       {loading && 
@@ -51,7 +49,9 @@ function App() {
       {!loading && 
         (searchResults.length
           ? <DataTable data={searchResults} data-testid="data-table" />
-          : <div>No kits found for "{searchInput}"</div>
+          : <div aria-label="No kits found message"
+              >No kits found for "{searchInput}"
+            </div>
         )
       }
     </div>

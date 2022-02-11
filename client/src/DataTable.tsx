@@ -16,7 +16,7 @@ function DataTable(props: { data: Kit[] }) {
           <TableRow>
             <TableCell>ID</TableCell>
             <TableCell align="right">Label ID</TableCell>
-            <TableCell align="right">Tracking Number</TableCell>
+            <TableCell align="right">Tracking Code</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
