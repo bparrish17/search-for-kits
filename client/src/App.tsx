@@ -1,59 +1,87 @@
 // external
 import React from 'react';
-import MuiTextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { debounce } from 'lodash'
 
 // internal
-import DataTable from './DataTable';
 import SearchService from './search.service';
 import { Kit } from './models';
 import './App.css';
 
 function App() {
   const [loading, setLoading] = React.useState<boolean>(true)
-  const [searchInput, setSearchInput] = React.useState<string>('')
+  const [selectedKit, setSelectedKit] = React.useState<Kit | null>()
+  const [selectedKitId, setSelectedKitId] = React.useState<number>();
   const [searchResults, setSearchResults] = React.useState<Kit[]>([])
   const searchService = new SearchService();
 
   React.useEffect(() => {
     setLoading(true)
-    searchService.searchKitsByLabelId(searchInput).then((results) => {
+    searchService.searchKitsByLabelId().then((results) => {
       setSearchResults(results)
       setLoading(false)
     })
-  }, [searchInput])
+  }, [])
 
-  const onSearchKitsInput = React.useMemo(() => debounce(setSearchInput, 300), []);
+  React.useEffect(() => {
+    if (selectedKitId) {
+      setLoading(true)
+      searchService.getKitById(selectedKitId).then((kit) => {
+        setSelectedKit(kit)
+        setLoading(false)
+      })
+    } else setSelectedKit(null)
+  }, [selectedKitId])
 
   return (
     <div className='App'>
-      <MuiTextField
-        focused
-        variant='outlined'
-        aria-label='Search for Kits By Label'
-        label='Search for Kits by Label'
-        data-testid="search-for-kits-text-field"
-        style={{ width: '100%', maxWidth: '400px', marginBottom: '20px' }}
-        onChange={(evt) => onSearchKitsInput(evt?.target?.value)}
+      <Autocomplete
+        disablePortal
+        options={searchResults}
+        getOptionLabel={(option: Kit) => option.label_id}
+        sx={{ marginBottom: '20px' }}
+        noOptionsText='No kits found'
+        onChange={(_evt, kit) => setSelectedKitId(kit?.id)}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
+        renderInput={(params: any) =>
+          <TextField
+            {...params}
+            data-testid='search-for-kits-text-field'
+            label='Search for Kits By Label ID'
+          />
+        }
       />
       {loading && 
         (<Box
-            data-testid="loader"
+            data-testid='loader'
             sx={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}
           >
           <CircularProgress />
         </Box>)
       }
-      {!loading && 
-        (searchResults.length
-          ? <DataTable data={searchResults} data-testid="data-table" />
-          : <div aria-label="No kits found message"
-              >No kits found for "{searchInput}"
-            </div>
-        )
-      }
+      {!loading && selectedKit && (
+        <Card>
+          <CardContent sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+            <Typography variant="h6" component="div">
+              Kit Details
+            </Typography>
+            <Typography variant="body2">
+              <span><b>ID:</b> {selectedKit.id}</span>
+            </Typography>
+            <Typography variant="body2">
+              <span><b>Label ID:</b> {selectedKit.label_id}</span>
+            </Typography>
+            <Typography variant="body2">
+              <span><b>Tracking Code: </b> {selectedKit.shipping_tracking_code}</span>
+            </Typography>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
