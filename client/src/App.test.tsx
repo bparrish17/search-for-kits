@@ -10,8 +10,8 @@ test('has text field for searching', async () => {
 
 test('text field has label for searching', async () => {
   render(<App />);
-  const textFieldElement = screen.getByTestId('search-for-kits-text-field')
-  expect(textFieldElement).toHaveTextContent('Search for Kits by Label')
+  const textFieldElement = screen.getByLabelText('Search for Kits By Label ID')
+  expect(textFieldElement).toBeInTheDocument()
 })
 
 test('should display loading spinner by default', async () => {

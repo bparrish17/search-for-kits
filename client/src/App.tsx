@@ -2,14 +2,12 @@
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete'
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 
 // internal
 import SearchService from './search.service';
+import KitDetails from './KitDetails';
 import { Kit } from './models';
 import './App.css';
 
@@ -58,30 +56,13 @@ function App() {
       />
       {loading && 
         (<Box
-            data-testid='loader'
-            sx={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}
-          >
+          data-testid='loader'
+          sx={{ display: 'flex', justifyContent: 'center', padding: '20px 0' }}
+        >
           <CircularProgress />
         </Box>)
       }
-      {!loading && selectedKit && (
-        <Card>
-          <CardContent sx={{ padding: '20px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-            <Typography variant="h6" component="div">
-              Kit Details
-            </Typography>
-            <Typography variant="body2">
-              <span><b>ID:</b> {selectedKit.id}</span>
-            </Typography>
-            <Typography variant="body2">
-              <span><b>Label ID:</b> {selectedKit.label_id}</span>
-            </Typography>
-            <Typography variant="body2">
-              <span><b>Tracking Code: </b> {selectedKit.shipping_tracking_code}</span>
-            </Typography>
-          </CardContent>
-        </Card>
-      )}
+      {!loading && selectedKit && <KitDetails kit={selectedKit} />}
     </div>
   );
 }
